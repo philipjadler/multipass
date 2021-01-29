@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Canonical, Ltd.
+ * Copyright (C) 2018-2021 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -312,13 +312,27 @@ void mp::LibVirtVirtualMachine::start()
     monitor->on_resume();
 }
 
-void mp::LibVirtVirtualMachine::stop()
+void mp::LibVirtVirtualMachine::stop(bool force)
 {
-    shutdown();
+    shutdown(force);
 }
 
-void mp::LibVirtVirtualMachine::shutdown()
+void mp::LibVirtVirtualMachine::shutdown(bool force)
 {
+    if (force)
+    {
+        auto domain = domain_by_name_for(vm_name, open_libvirt_connection(libvirt_wrapper).get(), libvirt_wrapper);
+        state = refresh_instance_state_for_domain(domain.get(), state, libvirt_wrapper);
+
+        if (state != State::stopped && state != State::off)
+        {
+            libvirt_wrapper->virDomainDestroy(domain.get());
+            update_state();
+        }
+
+        return;
+    }
+
     std::unique_lock<decltype(state_mutex)> lock{state_mutex};
     auto domain = domain_by_name_for(vm_name, open_libvirt_connection(libvirt_wrapper).get(), libvirt_wrapper);
     state = refresh_instance_state_for_domain(domain.get(), state, libvirt_wrapper);

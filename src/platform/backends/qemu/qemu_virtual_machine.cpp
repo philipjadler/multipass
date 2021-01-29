@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2020 Canonical, Ltd.
+ * Copyright (C) 2017-2021 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -279,13 +279,25 @@ void mp::QemuVirtualMachine::start()
     vm_process->write(qmp_execute_json("qmp_capabilities"));
 }
 
-void mp::QemuVirtualMachine::stop()
+void mp::QemuVirtualMachine::stop(bool force)
 {
-    shutdown();
+    shutdown(force);
 }
 
-void mp::QemuVirtualMachine::shutdown()
+void mp::QemuVirtualMachine::shutdown(bool force)
 {
+    if (force)
+    {
+        if (state != State::off && state != State::stopped && vm_process)
+            vm_process->kill();
+        else
+            mpl::log(mpl::Level::info, vm_name, fmt::format("Ignoring forced stop"));
+
+        return;
+    }
+
+    update_shutdown_status = false;
+
     if (state == State::suspended)
     {
         mpl::log(mpl::Level::info, vm_name, fmt::format("Ignoring shutdown issued while suspended"));

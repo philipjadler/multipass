@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Canonical, Ltd.
+ * Copyright (C) 2019-2021 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,9 +36,9 @@ public:
     LXDVirtualMachine(const VirtualMachineDescription& desc, VMStatusMonitor& monitor, NetworkAccessManager* manager,
                       const QUrl& base_url, const QString& bridge_name);
     ~LXDVirtualMachine() override;
-    void stop() override;
+    void stop(bool force = false) override;
     void start() override;
-    void shutdown() override;
+    void shutdown(bool force = false) override;
     void suspend() override;
     State current_state() override;
     int ssh_port() override;
