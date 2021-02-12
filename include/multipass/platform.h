@@ -51,6 +51,10 @@ public:
     Platform(const Singleton::PrivatePass&);
     // Get information on the network interfaces that are seen by the platform, indexed by name
     virtual std::map<std::string, NetworkInterfaceInfo> get_network_interfaces_info() const;
+    virtual int chown(const char* path, unsigned int uid, unsigned int gid);
+    virtual bool link(const char* target, const char* link);
+    virtual bool symlink(const char* target, const char* link, bool is_dir);
+    virtual int utime(const char* path, int atime, int mtime);
 };
 
 std::map<QString, QString> extra_settings_defaults();
@@ -72,10 +76,6 @@ logging::Logger::UPtr make_logger(logging::Level level);
 UpdatePrompt::UPtr make_update_prompt();
 std::unique_ptr<Process> make_sshfs_server_process(const SSHFSServerConfig& config);
 std::unique_ptr<Process> make_process(std::unique_ptr<ProcessSpec>&& process_spec);
-int chown(const char* path, unsigned int uid, unsigned int gid);
-bool symlink(const char* target, const char* link, bool is_dir);
-bool link(const char* target, const char* link);
-int utime(const char* path, int atime, int mtime);
 int symlink_attr_from(const char* path, sftp_attributes_struct* attr);
 bool is_alias_supported(const std::string& alias, const std::string& remote);
 bool is_remote_supported(const std::string& remote);

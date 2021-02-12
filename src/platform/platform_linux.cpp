@@ -66,6 +66,11 @@ std::map<std::string, mp::NetworkInterfaceInfo> mp::platform::Platform::get_netw
     return detail::get_network_interfaces_from(QDir{QStringLiteral("/sys/class/net")});
 }
 
+bool mp::platform::Platform::link(const char* target, const char* link)
+{
+    return ::link(target, link) == 0;
+}
+
 auto mp::platform::detail::get_network_interfaces_from(const QDir& sys_dir)
     -> std::map<std::string, NetworkInterfaceInfo>
 {
@@ -178,11 +183,6 @@ mp::UpdatePrompt::UPtr mp::platform::make_update_prompt()
 mp::logging::Logger::UPtr mp::platform::make_logger(mp::logging::Level level)
 {
     return std::make_unique<logging::JournaldLogger>(level);
-}
-
-bool mp::platform::link(const char* target, const char* link)
-{
-    return ::link(target, link) == 0;
 }
 
 bool mp::platform::is_alias_supported(const std::string& alias, const std::string& remote)
