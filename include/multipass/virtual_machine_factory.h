@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2020 Canonical, Ltd.
+ * Copyright (C) 2017-2021 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 #include <multipass/virtual_machine.h>
 #include <multipass/vm_image.h>
 #include <multipass/vm_image_vault.h>
+
+class QDir;
 
 namespace YAML
 {
@@ -61,6 +63,10 @@ public:
     virtual VMImageVault::UPtr create_image_vault(std::vector<VMImageHost*> image_hosts, URLDownloader* downloader,
                                                   const Path& cache_dir_path, const Path& data_dir_path,
                                                   const days& days_to_expire) = 0;
+    virtual QString make_cloud_init_image(const std::string& name, const QDir& instance_dir,
+                                          const YAML::Node& meta_data_config, const YAML::Node& user_data_config,
+                                          const YAML::Node& vendor_data_config,
+                                          const YAML::Node& network_data_config) = 0;
 
     // List all the network interfaces seen by the backend.
     virtual std::vector<NetworkInterfaceInfo> networks() const = 0;
