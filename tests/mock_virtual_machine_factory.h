@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2020 Canonical, Ltd.
+ * Copyright (C) 2017-2021 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,8 @@ struct MockVirtualMachineFactory : public VirtualMachineFactory
     MOCK_METHOD0(get_backend_version_string, QString());
     MOCK_METHOD5(create_image_vault,
                  VMImageVault::UPtr(std::vector<VMImageHost*>, URLDownloader*, const Path&, const Path&, const days&));
+    MOCK_METHOD6(make_cloud_init_image, QString(const std::string&, const QDir&, const YAML::Node&, const YAML::Node&,
+                                                const YAML::Node&, const YAML::Node&));
     MOCK_CONST_METHOD0(networks, std::vector<NetworkInterfaceInfo>());
 };
 }

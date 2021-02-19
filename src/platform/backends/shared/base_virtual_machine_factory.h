@@ -52,6 +52,10 @@ public:
                                                      days_to_expire);
     };
 
+    QString make_cloud_init_image(const std::string& name, const QDir& instance_dir, const YAML::Node& meta_data_config,
+                                  const YAML::Node& user_data_config, const YAML::Node& vendor_data_config,
+                                  const YAML::Node& network_data_config) override;
+
     std::vector<NetworkInterfaceInfo> networks() const override
     {
         throw NotImplementedOnThisBackendException("networks");
