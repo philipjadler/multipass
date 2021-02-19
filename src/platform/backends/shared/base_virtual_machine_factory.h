@@ -19,16 +19,12 @@
 #define MULTIPASS_BASE_VIRTUAL_MACHINE_FACTORY_H
 
 #include <multipass/exceptions/not_implemented_on_this_backend_exception.h>
-#include <multipass/format.h>
-#include <multipass/logging/log.h>
 #include <multipass/virtual_machine_factory.h>
 
 #include <daemon/default_vm_image_vault.h>
 
 namespace multipass
 {
-constexpr auto log_category = "base factory";
-
 class BaseVirtualMachineFactory : public VirtualMachineFactory
 {
 public:
